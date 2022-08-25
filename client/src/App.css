@@ -46,3 +46,9 @@
 .modalSubmit {
   margin-bottom: 30px;
 }
+
+.label {
+  text-align: center;
+  font-size: 20px;
+  color: gray;
+}

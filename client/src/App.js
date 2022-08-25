@@ -132,7 +132,8 @@ const App = () => {
     <div>
       <Navbar bg="dark" variant="dark">
         <Container>
-          <Navbar.Brand>Montgomery Blair Scheduler</Navbar.Brand>
+          <Navbar.Brand>Montgomery Blair Scheduler </Navbar.Brand>
+          
           <Nav>
             <Nav.Link>{currentName!==0 && <div>{currentName}</div>}</Nav.Link>
           </Nav>
@@ -147,7 +148,7 @@ const App = () => {
         centered
       >
         <Modal.Header>
-          <Modal.Title style={{margin: "auto"}}>Montgomery Blair HS Scheduler Sign In</Modal.Title>
+          <Modal.Title style={{margin: "auto"}}>Montgomery Blair HS Scheduler Sign In <br /> <p className="label">by Dhruva Arun</p> </Modal.Title>
         </Modal.Header>
         <Modal.Body>
 
