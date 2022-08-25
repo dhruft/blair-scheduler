@@ -193,7 +193,7 @@ const App = () => {
                     </div>
                   </Modal.Footer>
 
-                  <footer className="footer">Compare Your Schedule with Other Blair Students! <br></br> Developed by Dhruva Arun</footer>
+                  <footer className="footer">Compare Your Schedule with Other Blair Students! <br></br> Contact QuickMathzs#0600 on Discord to Report Bugs </footer>
 
               </Form>
 
