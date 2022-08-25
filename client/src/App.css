@@ -1,0 +1,48 @@
+.error {
+  color: red;
+  text-align: center;
+  margin-bottom: 1px;
+}
+
+.footer {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.periods {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+
+}
+
+.pd {
+  flex: 1 0 30%;
+  margin: 20px;
+  background-color: beige;
+  padding-top: 10px;
+  text-align: center;
+}
+
+.safety {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-around;
+  margin: 20px;
+}
+
+.segment {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+  font-size: 19px;
+  color: black;
+}
+
+.modalSubmit {
+  margin-bottom: 30px;
+}
