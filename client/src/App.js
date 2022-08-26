@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './App.css'
 
 import { Navbar, Container, Nav, } from 'react-bootstrap';
@@ -11,6 +11,7 @@ import { getDocs, query, collection, doc, where, updateDoc, getDoc, setDoc } fro
 import { AiFillCheckCircle } from 'react-icons/ai';
 
 const usersRef = collection(db, "users")
+const userDocRef =  doc(db, "users", "seXBtOXYlyIT8oJRq6Lq");
 
 const App = () => {
 
@@ -19,6 +20,11 @@ const App = () => {
   const [show, hideModal] = useState(true)
   const [currentName, changeName] = useState("");
   const [titles, changeTitles] = useState({"1": "Period 1", "2": "Period 2", "3": "Period 3", "4": "Period 4", "6": "Period 6", "7": "Period 7", "8": "Period 8", "9": "Period 9",})
+  const [userCount, changeCount] = useState(0)
+
+  useEffect(() => {
+    getDoc(userDocRef).then((snap)=> changeCount(Object.keys(snap.data()).length))
+  }, [])
 
   const updateFirebase = async (data, username) => {
 
@@ -57,7 +63,6 @@ const App = () => {
         }
       })
 
-      const userDocRef =  doc(db, "users", "seXBtOXYlyIT8oJRq6Lq");
       await updateDoc(userDocRef, {
         [username]: true
       });
@@ -148,7 +153,7 @@ const App = () => {
         centered
       >
         <Modal.Header>
-          <Modal.Title style={{margin: "auto"}}>Montgomery Blair HS Scheduler Sign In <br /> <p className="label">by Dhruva Arun</p> </Modal.Title>
+          <Modal.Title style={{margin: "auto"}}>Montgomery Blair HS Scheduler Sign In <br /> <p className="label">by Dhruva Arun</p>  <p className="label">User Count: {userCount}</p> </Modal.Title>
         </Modal.Header>
         <Modal.Body>
 
