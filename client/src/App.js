@@ -10,8 +10,8 @@ import { getDocs, query, collection, doc, where, updateDoc, getDoc, setDoc } fro
 
 import { AiFillCheckCircle } from 'react-icons/ai';
 
-const usersRef = collection(db, "users")
-const userDocRef =  doc(db, "users", "seXBtOXYlyIT8oJRq6Lq");
+const uCollection = "users2"
+const cCollection = "classes2"
 
 const App = () => {
 
@@ -19,29 +19,26 @@ const App = () => {
   const [isError, updateError] = useState(false)
   const [show, hideModal] = useState(true)
   const [currentName, changeName] = useState("");
-  const [titles, changeTitles] = useState({"1": "Period 1", "2": "Period 2", "3": "Period 3", "4": "Period 4", "6": "Period 6", "7": "Period 7", "8": "Period 8", "9": "Period 9",})
+  const [titles, changeTitles] = useState({"0": "Homeroom", "1": "Period 1", "2": "Period 2", "3": "Period 3", "4": "Period 4", "6": "Period 6", "7": "Period 7", "8": "Period 8", "9": "Period 9",})
   const [userCount, changeCount] = useState(0)
+  const [periods, changePeriods] = useState(['0', '1', '2', '3', '4', '6', '7', '8', '9'])
 
-  useEffect(() => {
-    getDoc(userDocRef).then((snap)=> changeCount(Object.keys(snap.data()).length))
-  }, [])
+  // useEffect(() => {
+  //   getDoc(userDocRef).then((snap)=> changeCount(Object.keys(snap.data()).length))
+  // }, [])
 
   const updateFirebase = async (data, username) => {
 
     //check if user is already registered\
-    const q = query(usersRef, where(username, "==", true));
-    const querySnapshot = await getDocs(q);
-    var userExists = false;
-
-    querySnapshot.forEach((doc) => {
-      userExists = true;
-    });
+    const userRef = doc(db, uCollection, username)
+    const userRefSnap = await getDoc(userRef);
+    var userExists = userRefSnap.exists();
 
     const newPeople = []
 
     if (!userExists) {
-      ["1","2","3","4","6","7","8","9"].map(async (pd) => {
-        const classRef = doc(db, "classes", data.sch[pd]);
+      periods.map(async (pd) => {
+        const classRef = doc(db, cCollection, data.sch[pd]);
         const docSnap = await getDoc(classRef);
 
         if (docSnap.exists()) {
@@ -55,7 +52,7 @@ const App = () => {
 
         } else {
 
-          await setDoc(doc(db, "classes", data.sch[pd]), {
+          await setDoc(doc(db, cCollection, data.sch[pd]), {
             value: [data.name]
           });
           newPeople.push([data.name])
@@ -63,14 +60,12 @@ const App = () => {
         }
       })
 
-      await updateDoc(userDocRef, {
-        [username]: true
-      });
+      await setDoc(doc(db, uCollection, username), {});
 
     } else {
 
-      ["1","2","3","4","6","7","8","9"].map(async (pd) => {
-        const classRef = doc(db, "classes", data.sch[pd]);
+      periods.map(async (pd) => {
+        const classRef = doc(db, cCollection, data.sch[pd]);
         const docSnap = await getDoc(classRef);
 
         const val = docSnap.data().value
@@ -124,6 +119,7 @@ const App = () => {
     ).then(
       async (data) => {
         if (data.school === "Montgomery Blair High") {
+          changePeriods(data.periods)
           await updateFirebase(data, username)
           hideModal(false)
         } else {
@@ -209,18 +205,16 @@ const App = () => {
         {people.length !== 0 && (
           people.map((pd, e)=> {
             return(
-              <ListGroup key={pd} className="pd">
-                <h4>{(e+(e>3 ? 2 : 1)).toString() + ": " + titles[(e+(e>3 ? 2 : 1)).toString()]}</h4>
+              <ListGroup key={e} className="pd">
+                <h4>{periods[e] + ": " + titles[periods[e]]}</h4>
                 {pd.map((name) => {return(
-                  <><ListGroup.Item key={pd+10}>{name}</ListGroup.Item></>)
+                  <><ListGroup.Item key={e+10}>{name}</ListGroup.Item></>)
                 })}
               </ListGroup>
             )
           })
         )}
       </div>
-      
-
 
     </div>
   )

@@ -40,17 +40,16 @@ def getData():
         
         sv = StudentVue(username, password, 'md-mcps-psv.edupoint.com')
         
-        data = {"sch": {}, "titles":{}}
+        data = {"sch": {}, "titles":{}, "periods":[]}
 
         sch = sv.get_schedule()
+        classes = sch["StudentClassSchedule"]["ClassLists"]["ClassListing"]
 
-        for pd in range(10):
-            if pd != 5 and pd != 0:
-                data["sch"][str(pd)] = sch["StudentClassSchedule"]["ClassLists"]["ClassListing"][pd]["@SectionGU"]
-                
-        for pd in range(10):
-            if pd != 5 and pd != 0:
-                data["titles"][str(pd)] = sch["StudentClassSchedule"]["ClassLists"]["ClassListing"][pd]["@CourseTitle"]
+        for pd in range(len(classes)):
+            if classes[pd]["@CourseTitle"] not in ["Lunch", "Counselor", "Advisory"]:
+                data["periods"].append(str(pd))
+                data["titles"][str(pd)] = classes[pd]["@CourseTitle"]
+                data["sch"][str(pd)] = classes[pd]["@SectionGU"]
 
         info = sv.get_student_info()
         data["name"] = info["StudentInfo"]["FormattedName"]['$']
