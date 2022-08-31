@@ -23,9 +23,17 @@ const App = () => {
   const [userCount, changeCount] = useState(0)
   const [periods, changePeriods] = useState(['0', '1', '2', '3', '4', '6', '7', '8', '9'])
 
-  // useEffect(() => {
-  //   getDoc(userDocRef).then((snap)=> changeCount(Object.keys(snap.data()).length))
-  // }, [])
+  useEffect(() => {
+
+    const fetchUsers = async () => {
+      const getUsersRef = collection(db, uCollection);
+      const usersSnapshot = await getDocs(getUsersRef);
+      return usersSnapshot;
+    }
+
+    fetchUsers().then((result)=>changeCount(result.size))
+    
+  }, [])
 
   const updateFirebase = async (data, username) => {
 
@@ -118,13 +126,9 @@ const App = () => {
       }
     ).then(
       async (data) => {
-        if (data.school === "Montgomery Blair High") {
-          changePeriods(data.periods)
-          await updateFirebase(data, username)
-          hideModal(false)
-        } else {
-          updateError(true)
-        }    
+        changePeriods(data.periods)
+        await updateFirebase(data, username)
+        hideModal(false)   
       }
     )
   }
@@ -133,7 +137,7 @@ const App = () => {
     <div>
       <Navbar bg="dark" variant="dark">
         <Container>
-          <Navbar.Brand>Montgomery Blair Scheduler </Navbar.Brand>
+          <Navbar.Brand>MCPS Schedule Comparer </Navbar.Brand>
           
           <Nav>
             <Nav.Link>{currentName!==0 && <div>{currentName}</div>}</Nav.Link>
@@ -149,9 +153,11 @@ const App = () => {
         centered
       >
         <Modal.Header>
-          <Modal.Title style={{margin: "auto"}}>Montgomery Blair HS Scheduler Sign In <br /> <p className="label">by Dhruva Arun</p>  <p className="label">User Count: {userCount}</p> </Modal.Title>
+          <Modal.Title className="modalTitle"> <h1>{"Sign In (Semester 2)"}</h1> </Modal.Title>
         </Modal.Header>
         <Modal.Body>
+
+            <div className="moreInfo"> <h4>MCPS Schedule Comparer <span className="label">by Dhruva Arun</span> </h4>   <p className="label">User Count: {userCount}</p> </div>
 
               <Form onSubmit={fetchData}>
 
