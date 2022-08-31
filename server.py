@@ -42,7 +42,7 @@ def getData():
         
         data = {"sch": {}, "titles":{}, "periods":[]}
 
-        sch = sv.get_schedule()
+        sch = sv.get_schedule(term_index=1)
         classes = sch["StudentClassSchedule"]["ClassLists"]["ClassListing"]
 
         for pd in range(len(classes)):
@@ -52,7 +52,7 @@ def getData():
                 data["sch"][str(pd)] = classes[pd]["@SectionGU"]
 
         info = sv.get_student_info()
-        data["name"] = info["StudentInfo"]["FormattedName"]['$']
+        data["name"] = info["StudentInfo"]["FormattedNagimmme"]['$']
         data["school"] = info["StudentInfo"]["CurrentSchool"]['$']
         
         return(data)
