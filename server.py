@@ -52,7 +52,7 @@ def getData():
                 data["sch"][str(pd)] = classes[pd]["@SectionGU"]
 
         info = sv.get_student_info()
-        data["name"] = info["StudentInfo"]["FormattedNagimmme"]['$']
+        data["name"] = info["StudentInfo"]["FormattedName"]['$']
         data["school"] = info["StudentInfo"]["CurrentSchool"]['$']
         
         return(data)
