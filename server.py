@@ -40,9 +40,18 @@ def getData():
         
         sv = StudentVue(username, password, 'md-mcps-psv.edupoint.com')
         
-        data = {"sch": {}, "titles":{}, "periods":[]}
+        data = {"sch": {}, "titles":{}, "periods":[], "error":0}
 
         sch = sv.get_schedule(term_index=1)
+        
+        if (bool(sch.get('RT_ERROR'))):
+            data["error"] = 500
+            return(data)
+            
+        if (not bool(sch["StudentClassSchedule"]["ClassLists"].get('ClassListing'))):
+            data["error"] = 501
+            return(data)
+        
         classes = sch["StudentClassSchedule"]["ClassLists"]["ClassListing"]
 
         for pd in range(len(classes)):

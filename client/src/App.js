@@ -6,7 +6,7 @@ import { Modal } from 'react-bootstrap'
 import { InputGroup, Button, Form, ListGroup } from 'react-bootstrap';
 
 import db from './firebase.js';
-import { getDocs, query, collection, doc, where, updateDoc, getDoc, setDoc } from 'firebase/firestore'
+import { getDocs, collection, doc, updateDoc, getDoc, setDoc } from 'firebase/firestore'
 
 import { AiFillCheckCircle } from 'react-icons/ai';
 
@@ -16,7 +16,7 @@ const cCollection = "classes2"
 const App = () => {
 
   const [people, setPeople] = useState([])
-  const [isError, updateError] = useState(false)
+  const [isError, updateError] = useState(0)
   const [show, hideModal] = useState(true)
   const [currentName, changeName] = useState("");
   const [titles, changeTitles] = useState({"0": "Homeroom", "1": "Period 1", "2": "Period 2", "3": "Period 3", "4": "Period 4", "6": "Period 6", "7": "Period 7", "8": "Period 8", "9": "Period 9",})
@@ -115,17 +115,21 @@ const App = () => {
 
     fetch("/getData?username="+username_encrypted+"&password="+password_encrypted).then(
       res => {
-
-        if (res.status === 500) {
-          event.target.reset()
-          updateError(true);
-          throw "Invalid Login"
-        }
-
         return res.json();
       }
     ).then(
       async (data) => {
+
+        if (data.error === 500) {
+          event.target.reset()
+          updateError(500);
+          return true;
+        } if (data.error === 501) {
+          event.target.reset()
+          updateError(501);
+          return true;
+        }
+
         changePeriods(data.periods)
         await updateFirebase(data, username)
         hideModal(false)   
@@ -161,7 +165,8 @@ const App = () => {
 
               <Form onSubmit={fetchData}>
 
-                {isError && <p className="error">Invalid Username or Password!</p>}
+                {(isError === 500) && <p className="error">Invalid Username or Password!</p>}
+                {(isError === 501) && <p className="error">Semester 2 not available for your school!</p>}
 
                   <Form.Group className="mb-4">
                       <Form.Label> <b>Username</b> </Form.Label>
@@ -169,7 +174,7 @@ const App = () => {
                           <Form.Control 
                           type="username"
                           placeholder="Enter Username"
-                          isInvalid={ isError } />
+                          isInvalid={ (isError === 500) } />
                           <InputGroup.Text id="basic-addon1">@mcpsmd.net</InputGroup.Text>
                       </InputGroup>
                       <br />
@@ -178,7 +183,7 @@ const App = () => {
                           <Form.Control 
                           type="password" 
                           placeholder="Enter Password"
-                          isInvalid={ isError } />
+                          isInvalid={ isError  === 500} />
                       </InputGroup>
                           
                   </Form.Group>
