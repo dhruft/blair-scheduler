@@ -123,11 +123,11 @@ const App = () => {
         if (data.error === 500) {
           event.target.reset()
           updateError(500);
-          return true;
+          throw "Invalid Login"
         } if (data.error === 501) {
           event.target.reset()
           updateError(501);
-          return true;
+          throw "Not Updated"
         }
 
         changePeriods(data.periods)
